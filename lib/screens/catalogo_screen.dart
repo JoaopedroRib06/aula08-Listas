@@ -18,6 +18,54 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     const Produto(id: '5', nome: 'Teclado Mecânico RGB', preco: 450.00, categoria: 'Periféricos', icone: '⌨️'),
   ];
 
+  int _contadorNovos = 1;
+
+  void _adicionarProduto() {
+    setState(() {
+      final novoId = DateTime.now().millisecondsSinceEpoch.toString();
+      final novosExemplos = [
+        Produto(
+          id: novoId,
+          nome: 'Mouse Sem Fio Gamer #$_contadorNovos',
+          preco: 250.00 + (_contadorNovos * 15),
+          categoria: 'Periféricos',
+          icone: '🖱️',
+        ),
+        Produto(
+          id: novoId,
+          nome: 'Monitor UltraWide 29" #$_contadorNovos',
+          preco: 1450.00 + (_contadorNovos * 20),
+          categoria: 'Monitores',
+          icone: '🖥️',
+        ),
+        Produto(
+          id: novoId,
+          nome: 'Cadeira Ergonômica #$_contadorNovos',
+          preco: 980.00 + (_contadorNovos * 10),
+          categoria: 'Mobiliário',
+          icone: '🪑',
+        ),
+        Produto(
+          id: novoId,
+          nome: 'Caixa de Som JBL #$_contadorNovos',
+          preco: 320.00 + (_contadorNovos * 5),
+          categoria: 'Áudio',
+          icone: '🔊',
+        ),
+      ];
+      final novoProduto = novosExemplos[(_contadorNovos - 1) % novosExemplos.length];
+      _produtos.add(novoProduto);
+      _contadorNovos++;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Produto "${_produtos.last.nome}" adicionado com sucesso!'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +100,11 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _adicionarProduto,
+        tooltip: 'Adicionar Produto',
+        child: const Icon(Icons.add),
       ),
     );
   }
