@@ -84,23 +84,88 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: _produtos.length,
-        itemBuilder: (context, index) {
-          final produto = _produtos[index];
-          return ProdutoCard(
-            produto: produto,
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Item selecionado: ${produto.nome}'),
-                  duration: const Duration(seconds: 1),
-                ),
-              );
-            },
-          );
-        },
-      ),
+      body: _produtos.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Nenhum produto no catálogo',
+                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            )
+          : ListView.builder(
+              itemCount: _produtos.length,
+              itemBuilder: (context, index) {
+                final produto = _produtos[index];
+                return Dismissible(
+                  key: Key(produto.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade400,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Remover',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.delete, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                  onDismissed: (direction) {
+                    final itemRemovido = produto;
+                    final indexRemovido = index;
+                    setState(() {
+                      _produtos.removeAt(index);
+                    });
+
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('${itemRemovido.nome} removido do catálogo'),
+                        duration: const Duration(seconds: 3),
+                        action: SnackBarAction(
+                          label: 'Desfazer',
+                          textColor: Colors.amber,
+                          onPressed: () {
+                            setState(() {
+                              _produtos.insert(indexRemovido, itemRemovido);
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: ProdutoCard(
+                    produto: produto,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Item selecionado: ${produto.nome}'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: _adicionarProduto,
         tooltip: 'Adicionar Produto',
