@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/produto.dart';
 import '../widgets/produto_card.dart';
+import 'detalhes_produto_screen.dart';
 
 class CatalogoScreen extends StatefulWidget {
   const CatalogoScreen({super.key});
@@ -155,10 +156,10 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                   child: ProdutoCard(
                     produto: produto,
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Item selecionado: ${produto.nome}'),
-                          duration: const Duration(seconds: 1),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetalhesProdutoScreen(produto: produto),
                         ),
                       );
                     },
