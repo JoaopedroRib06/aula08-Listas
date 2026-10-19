@@ -1,76 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pdm_aula8_listas/main.dart';
+import 'package:pdm_aula8_listas/models/noticia_model.dart';
+import 'package:pdm_aula8_listas/models/comentario_model.dart';
 
 void main() {
-  testWidgets('CatalogoScreen renderiza lista e contador de itens corretamente', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const MeuApp());
+  group('Testes de Modelagem', () {
+    test('NoticiaModel.fromJson mapeia dados corretamente com valores padrão', () {
+      final json = {
+        'id': 1,
+        'userId': 2,
+        'title': 'Título de Teste',
+        'body': 'Corpo de teste para validação de mapeamento da API remota.',
+      };
 
-    // Verifica que o título está presente
-    expect(find.text('Catálogo de Produtos'), findsOneWidget);
+      final noticia = NoticiaModel.fromJson(json);
 
-    // Verifica contador inicial no AppBar
-    expect(find.text('Itens: 5'), findsOneWidget);
+      expect(noticia.id, 1);
+      expect(noticia.autorId, 2);
+      expect(noticia.titulo, 'Título de Teste');
+      expect(noticia.autor, 'Autor ID 2');
+      expect(noticia.conteudoCompleto, 'Corpo de teste para validação de mapeamento da API remota.');
+      expect(noticia.resumo.endsWith('...'), isTrue);
+      expect(noticia.urlImagem, contains('picsum.photos'));
+    });
 
-    // Verifica produtos iniciais
-    expect(find.text('Smartphone Galaxy S24'), findsOneWidget);
-    expect(find.text('Notebook Dell XPS'), findsOneWidget);
-    expect(find.text('Fone Bluetooth Sony'), findsOneWidget);
+    test('ComentarioModel.fromJson mapeia dados corretamente', () {
+      final json = {
+        'id': 10,
+        'postId': 1,
+        'name': 'João Silva',
+        'email': 'joao@teste.com',
+        'body': 'Excelente notícia!',
+      };
+
+      final comentario = ComentarioModel.fromJson(json);
+
+      expect(comentario.id, 10);
+      expect(comentario.postId, 1);
+      expect(comentario.nome, 'João Silva');
+      expect(comentario.email, 'joao@teste.com');
+      expect(comentario.corpo, 'Excelente notícia!');
+    });
   });
 
-  testWidgets('Nível 1: FloatingActionButton adiciona produto dinamicamente', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const MeuApp());
+  group('Testes de Interface', () {
+    testWidgets('FeedNoticiasScreen renderiza AppBar, campo de busca e ações', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(const MeuApp());
 
-    expect(find.text('Itens: 5'), findsOneWidget);
+      // Verifica título no AppBar
+      expect(find.text('Portal de Notícias'), findsOneWidget);
 
-    // Clica no FloatingActionButton
-    await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
+      // Verifica campo de busca
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.text('Buscar notícia por título...'), findsOneWidget);
 
-    // Contador deve ter sido atualizado para 6
-    expect(find.text('Itens: 6'), findsOneWidget);
-  });
-
-  testWidgets('Nível 2: Deslizar item remove com Dismissible', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const MeuApp());
-
-    expect(find.text('Itens: 5'), findsOneWidget);
-    expect(find.text('Smartphone Galaxy S24'), findsOneWidget);
-
-    // Desliza para remover o primeiro item
-    await tester.drag(find.text('Smartphone Galaxy S24'), const Offset(-500.0, 0.0));
-    await tester.pumpAndSettle();
-
-    // Contador deve diminuir para 4 e o item não deve mais estar na tela
-    expect(find.text('Itens: 4'), findsOneWidget);
-    expect(find.text('Smartphone Galaxy S24'), findsNothing);
-  });
-
-  testWidgets('Nível 3: Tocar no ProdutoCard navega para DetalhesProdutoScreen', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(const MeuApp());
-
-    // Toca no card do Smartphone Galaxy S24
-    await tester.tap(find.text('Smartphone Galaxy S24'));
-    await tester.pumpAndSettle();
-
-    // Deve estar na tela de detalhes
-    expect(find.text('Descrição e Benefícios'), findsOneWidget);
-    expect(find.text('Comprar Agora'), findsOneWidget);
-    expect(find.text('Voltar ao Catálogo'), findsOneWidget);
-
-    // Toca no botão de voltar da AppBar
-    await tester.tap(find.byType(BackButton));
-    await tester.pumpAndSettle();
-
-    // Retorna ao catálogo
-    expect(find.text('Catálogo de Produtos'), findsOneWidget);
+      // Verifica botões na AppBar
+      expect(find.byIcon(Icons.wifi), findsOneWidget);
+      expect(find.byIcon(Icons.refresh), findsOneWidget);
+    });
   });
 }
