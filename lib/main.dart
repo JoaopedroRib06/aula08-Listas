@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/catalogo_screen.dart';
+import 'screens/feed_noticias_screen.dart';
 
-void main() {
-  runApp(const MeuApp());
-}
+void main() => runApp(const MeuApp());
 
 class MeuApp extends StatelessWidget {
   const MeuApp({super.key});
@@ -12,12 +10,12 @@ class MeuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aula 8 - Listas e Organização',
+      title: 'Aula 10 - Listas e APIs',
       theme: ThemeData(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+        colorSchemeSeed: Colors.teal,
       ),
-      home: const CatalogoScreen(),
+      home: const FeedNoticiasScreen(),
     );
   }
 }
