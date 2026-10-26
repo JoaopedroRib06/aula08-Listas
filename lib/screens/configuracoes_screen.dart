@@ -14,6 +14,7 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
   final _nomeController = TextEditingController();
   bool _modoEscuro = false;
   bool _carregando = true;
+  String _ultimoAcesso = '';
 
   @override
   void initState() {
@@ -24,9 +25,15 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
   Future<void> _carregarPreferencias() async {
     final nome = await _service.obterNomeUsuario();
     final modoEscuro = await _service.obterModoEscuro();
+    final ultimoAcessoSalvo = await _service.obterUltimoAcesso();
+
+    // Salva o momento da execução atual para o próximo acesso (Desafio Básico)
+    await _service.salvarUltimoAcesso(DateTime.now().toString());
+
     setState(() {
       _nomeController.text = nome;
       _modoEscuro = modoEscuro;
+      _ultimoAcesso = ultimoAcessoSalvo ?? 'Primeiro acesso registrado agora';
       _carregando = false;
     });
   }
@@ -38,6 +45,22 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Preferências salvas com sucesso!')),
+      );
+    }
+  }
+
+  Future<void> _redefinirPadroes() async {
+    await _service.limparTudo();
+    setState(() {
+      _nomeController.text = 'Usuário Convidado';
+      _modoEscuro = false;
+      _ultimoAcesso = 'Preferências resetadas';
+    });
+    widget.onTemaAlterado(false);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Configurações redefinidas para os padrões!')),
       );
     }
   }
@@ -76,6 +99,23 @@ class _ConfiguracoesScreenState extends State<ConfiguracoesScreen> {
                 icon: const Icon(Icons.save),
                 label: const Text('Salvar Alterações'),
               ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _redefinirPadroes,
+                icon: const Icon(Icons.restore),
+                label: const Text('Redefinir Padrões'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Último acesso: $_ultimoAcesso',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey,
+                  ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
