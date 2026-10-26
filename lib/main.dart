@@ -11,7 +11,7 @@ void main() async {
 
 class MeuApp extends StatefulWidget {
   final bool modoEscuroInicial;
-  const MeuApp({super.key, required this.modoEscuroInicial});
+  const MeuApp({super.key, this.modoEscuroInicial = false});
 
   @override
   State<MeuApp> createState() => _MeuAppState();
