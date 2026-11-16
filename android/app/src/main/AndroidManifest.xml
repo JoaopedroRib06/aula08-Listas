@@ -1,4 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Aula 14: localização precisa e aproximada -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Aula 15: leitura de imagens da galeria -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- O image_picker usa o app de câmera do sistema, então a permissão
+         CAMERA não é necessária. A feature é opcional para permitir instalar
+         em aparelhos sem câmera. -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
         android:label="pdm_aula8_listas"
         android:name="${applicationName}"

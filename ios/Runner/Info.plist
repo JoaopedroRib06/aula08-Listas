@@ -26,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Permite capturar a foto de perfil usando a câmera.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Permite escolher uma foto da galeria para o perfil.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Permite obter sua localização para o check-in.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
