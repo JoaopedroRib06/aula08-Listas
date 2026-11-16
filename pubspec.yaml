@@ -34,6 +34,12 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  shared_preferences: ^2.2.2 # Pacote oficial de armazenamento chave-valor
+  sqflite: ^2.3.2 # Banco de dados SQLite local
+  path: ^1.9.0 # Composição de caminhos do banco
+  geolocator: ^11.0.0 # GPS e geolocalização
+  image_picker: ^1.1.0 # Câmera e galeria de mídia
 
 dev_dependencies:
   flutter_test:
